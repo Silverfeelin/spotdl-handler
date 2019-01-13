@@ -1,6 +1,6 @@
-# [spotify-downloader](https://github.com/ritiek/spotify-downloader) Handler
+# [Spotify-Downloader](https://github.com/ritiek/spotify-downloader) Handler
 
-The main purpose of this repository is to expose a download button on Spotify to call [spotify-downloader](https://github.com/ritiek/spotify-downloader) (`spotdl`) without needing to use the command line.
+The main purpose of this repository is to expose a download button on Spotify to call [Spotify-Downloader](https://github.com/ritiek/spotify-downloader) (`spotdl`) without needing to use the command line.
 
 <img src="https://i.imgur.com/UWh3UrL.png" width="858" height="108" />
 
@@ -12,10 +12,10 @@ The main purpose of this repository is to expose a download button on Spotify to
 
 ## Prerequisites
 
-* [spotify-downloader](https://github.com/ritiek/spotify-downloader)
+* [Spotify-Downloader](https://github.com/ritiek/spotify-downloader)
 
 
-  > Both `spotdl` and `ffmpeg` must be available globally. For Windows users, make sure the correct directory is included in your PATH variables. More information can be found on the [spotify-downloader installation page](https://github.com/ritiek/spotify-downloader/wiki/Installation).
+  > Both `spotdl` and `ffmpeg` must be available globally. For Windows users, make sure the correct directory is included in your PATH variables. More information can be found on the [Spotify-Downloader installation page](https://github.com/ritiek/spotify-downloader/wiki/Installation).
 
 * [.NET Core Runtime](https://dotnet.microsoft.com/download) <sup>*(2.1 or above)*</sup>
 
