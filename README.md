@@ -31,7 +31,7 @@ The main purpose of this repository is to expose a download button on Spotify to
 
 ### 1 - Application
 
-* Unpack the contents of `SpotifyDownloader` somewhere. It doesn't matter where.
+* Unpack the contents of the [**Release**](https://github.com/Silverfeelin/spotdl-handler/releases) zip somewhere. It doesn't matter where.
 * Execture `configure.bat` or run `dotnet SpotifyDownloader.dll` from the command line.
 * Press enter to make the application download music to your *My Music* folder or enter a path.
 * Press enter to download music as `.m4a` files, or enter a file extension.
