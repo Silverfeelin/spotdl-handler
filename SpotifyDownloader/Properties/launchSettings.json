@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SpotifyDownloader": {
+      "commandName": "Project",
+      "commandLineArgs": "https://open.spotify.com/album/0OkJThJls8FO1lutMzMDJ0"
+    }
+  }
+}

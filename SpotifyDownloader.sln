@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2011
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifyDownloader", "SpotifyDownloader\SpotifyDownloader.csproj", "{93CF3623-2D0F-497F-BFF1-DCE79092D8D4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{93CF3623-2D0F-497F-BFF1-DCE79092D8D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93CF3623-2D0F-497F-BFF1-DCE79092D8D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93CF3623-2D0F-497F-BFF1-DCE79092D8D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93CF3623-2D0F-497F-BFF1-DCE79092D8D4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE9943D9-9481-493B-86F0-B3345F08128E}
+	EndGlobalSection
+EndGlobal
