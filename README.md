@@ -14,8 +14,7 @@ The main purpose of this repository is to expose a download button on Spotify to
 
 * [Spotify-Downloader](https://github.com/ritiek/spotify-downloader)
 
-
-  > Both `spotdl` and `ffmpeg` must be available globally. For Windows users, make sure the correct directory is included in your PATH variables. More information can be found on the [Spotify-Downloader installation page](https://github.com/ritiek/spotify-downloader/wiki/Installation).
+> Both `spotdl` and `ffmpeg` must be available globally. For Windows users, make sure the correct directory is included in your PATH variables. More information can be found on the [Spotify-Downloader installation page](https://github.com/ritiek/spotify-downloader/wiki/Installation).
   
 *Note: As of writing this, this application depends on a feature not yet released in Spotify-Downloader. It will most likely be included in the 1.1.2 release. See https://github.com/ritiek/spotify-downloader/pull/476. Until this feature is released, you can only download songs and not playlists or albums.*
 
@@ -26,8 +25,7 @@ The main purpose of this repository is to expose a download button on Spotify to
 * [Tampermonkey](https://tampermonkey.net/) for your favourite browser:
   * [Chrome](https://tampermonkey.net/?browser=chrome), [Firefox](https://tampermonkey.net/?browser=firefox), [Edge](https://tampermonkey.net/?browser=edge), [more...](https://tampermonkey.net/)
 
-
-  > The included script adds a download button to tracks, albums and playlists on the Spotify website.
+> The included script adds a download button to tracks, albums and playlists on the Spotify website.
 
 ## Installation
 
