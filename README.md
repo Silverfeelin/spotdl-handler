@@ -16,6 +16,8 @@ The main purpose of this repository is to expose a download button on Spotify to
 
 
   > Both `spotdl` and `ffmpeg` must be available globally. For Windows users, make sure the correct directory is included in your PATH variables. More information can be found on the [Spotify-Downloader installation page](https://github.com/ritiek/spotify-downloader/wiki/Installation).
+  
+*Note: As of writing this, this application depends on a feature not yet released in Spotify-Downloader. It will most likely be included in the 1.1.2 release. See https://github.com/ritiek/spotify-downloader/pull/476. Until this feature is released, you can only download songs and not playlists or albums.*
 
 * [.NET Core Runtime](https://dotnet.microsoft.com/download) <sup>*(2.1 or above)*</sup>
 
