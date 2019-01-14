@@ -52,7 +52,11 @@ let createEntry = function() {
     if (menu.length > 0 && menu.find('.spotdl').length == 0) {
         let link = findLink(menu);
         if (!link) return;
-        $('<div class="react-contextmenu-item spotdl" role="menuitem" tabindex="-1" aria-disabled="false">Download</div>').prependTo(menu).click(() => run(link));
+        $('<div class="react-contextmenu-item spotdl" role="menuitem" tabindex="-1" aria-disabled="false">Download</div>').prependTo(menu).click(() => {
+            link = findLink(menu);
+            if (!link) return;
+            run(link);
+        });
     }
 }
 
