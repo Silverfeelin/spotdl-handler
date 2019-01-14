@@ -4,12 +4,6 @@ The main purpose of this repository is to expose a download button on Spotify to
 
 <img src="https://i.imgur.com/UWh3UrL.png" width="858" height="108" />
 
-**Quick Navigation**
-* [Prerequisites](#prerequisites)
-* [Installation](#installation)
-* [Usage](#usage)
-* [Disclaimer](#disclaimer)
-
 ## [Prerequisites](https://github.com/Silverfeelin/spotdl-handler/wiki/Prerequisites)
 
 ## [Installation](https://github.com/Silverfeelin/spotdl-handler/wiki/Installation)
