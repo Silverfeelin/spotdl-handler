@@ -2,7 +2,7 @@
 // @name          Spotify Web - Download
 // @description   Right click > Download. Requires the protocol handler 'spotdl'.
 // @namespace     https://github.com/Silverfeelin/
-// @version       0.1
+// @version       0.2
 // @license       MIT
 // @copyright     2019, Silverfeelin
 // @include       https://open.spotify.com/*
@@ -52,7 +52,12 @@ let createEntry = function() {
     if (menu.length > 0 && menu.find('.spotdl').length == 0) {
         let link = findLink(menu);
         if (!link) return;
-        $('<div class="react-contextmenu-item spotdl" role="menuitem" tabindex="-1" aria-disabled="false">Download</div>').prependTo(menu).click(() => {
+        $('<div class="react-contextmenu-item spotdl" role="menuitem" tabindex="-1" aria-disabled="false">Download</div>').prependTo(menu).click(function(event) {
+            $(menu).hide();
+            setTimeout(function() {
+                $(document).bind('click.spotdl contextmenu.spotdl', function() { $(menu).show(); $(document).unbind('click.spotdl contextmenu.spotdl'); });
+            }, 0);
+
             link = findLink(menu);
             if (!link) return;
             run(link);
