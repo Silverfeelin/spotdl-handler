@@ -13,7 +13,7 @@ The main purpose of this repository is to expose a download button on Spotify to
 * Visit https://open.spotify.com/
 * Right click any track, album or playlist and select <kbd>Download</kbd>.
 
-Did the tool work at some point but no longer does? Make sure you have updated `spotdl` using `pip3 install -U spotdl`. You may also install `youtube-dl` with `pip3 install -U youtube_dl`.
+Did the tool stop working? Make sure you have updated `spotdl` using `pip3 install -U spotdl`. You may also update `youtube-dl` to the latest version with `pip3 install -U youtube-dl`.
 
 ## Disclaimer
 
