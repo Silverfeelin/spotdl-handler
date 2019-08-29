@@ -29,10 +29,12 @@ namespace SpotifyDownloader
 
         public void DownloadAlbum(string url, string directory, string extension = ".m4a")
         {
-            string file = Path.Combine(directory, "spotdl_album.txt");
+            var file = Path.Combine(directory, "spotdl_album.txt");
+            File.Delete(file);
+
             using (var process = CreateProcess())
             {
-                process.StartInfo.Arguments = $"-ll WARNING -b {url} --write-to \"{file}\" --overwrite skip";
+                process.StartInfo.Arguments = $"-ll WARNING -b {url} --write-to \"{file}\" --overwrite force";
                 RunProcess(process);
             }
 
@@ -42,10 +44,12 @@ namespace SpotifyDownloader
 
         public void DownloadPlaylist(string url, string directory, string extension = ".m4a")
         {
-            string file = Path.Combine(directory, "spotdl_playlist.txt");
+            var file = Path.Combine(directory, "spotdl_playlist.txt");
+            File.Delete(file);
+
             using (var process = CreateProcess())
             {
-                process.StartInfo.Arguments = $"-ll WARNING -p {url} --write-to \"{file}\" --overwrite skip";
+                process.StartInfo.Arguments = $"-ll WARNING -p {url} --write-to \"{file}\" --overwrite force";
                 RunProcess(process);
             }
 
