@@ -6,7 +6,7 @@
 !include StrRep.nsh
 
 !define PRODUCT_NAME "SpotDL Handler"
-!define PRODUCT_VERSION "0.1"
+!define PRODUCT_VERSION "1.0"
 !define PRODUCT_PUBLISHER "Silverfeelin"
 !define PRODUCT_WEB_SITE "https://www.github.com/Silverfeelin"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -15,7 +15,7 @@
 !define MUI_ABORTWARNING
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
 
-!define BIN "..\..\SpotifyDownloader\bin\Release\netcoreapp2.0\publish"
+!define BIN "..\..\SpotifyDownloader\bin\Release\netcoreapp2.1\publish"
 
 ; Wizard pages
 !insertmacro MUI_PAGE_WELCOME
@@ -50,6 +50,8 @@ Section "MainSection" SEC01
   File "${BIN}\SpotifyDownloader.runtimeconfig.json"
   File "${BIN}\configure.bat"
   
+  IfFileExists "$INSTDIR\appsettings.user.json" skip_user save_user
+  save_user:
   ; SpotDL-Handler user config
   nsJSON::Set /value `{}`
   ${StrReplaceV4} "$R0" "\" "\\" $MUSIC
@@ -57,6 +59,7 @@ Section "MainSection" SEC01
   nsJSON::Set `output` `directory` /value `"$R0"`
   nsJSON::Set `output` `extension` /value `".m4a"`
   nsJSON::Serialize /format /file $INSTDIR\appsettings.user.json
+  skip_user:
   
   ; Protocol
   WriteRegStr "HKCR" "spotdl" "" "spotdl protocol"
