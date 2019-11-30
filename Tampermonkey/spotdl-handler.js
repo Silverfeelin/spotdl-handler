@@ -1,16 +1,19 @@
 // ==UserScript==
 // @name          Spotify Web - Download
-// @description   Right click > Download. Requires the protocol handler 'spotdl'.
+// @description   Right click > Download. Requires the protocol handler 'spotdl'. https://github.com/Silverfeelin/spotdl-handler
 // @namespace     https://github.com/Silverfeelin/
-// @version       0.2
+// @version       1.1
 // @license       MIT
 // @copyright     2019, Silverfeelin
 // @include       https://open.spotify.com/*
 // @require       https://code.jquery.com/jquery-3.3.1.min.js
+// @grant         GM_addStyle
 // ==/UserScript==
 
 "use strict";
 let $ = window.jQuery;
+
+GM_addStyle('.spotdl-choice { float: right; cursor: pointer } .spotdl-choice:hover { text-decoration: underline; }');
 
 let pattern = /https:\/\/open\.spotify\.com\/([a-zA-Z]+)\/[a-zA-Z0-9]+/
 let allowed = {
@@ -31,11 +34,9 @@ let findLink = function (target) {
             type = res[1];
         }
     });
+
     if (!url) return null;
-    return {
-        url: url,
-        type: type
-    };
+    return { url: url, type: type };
 }
 
 let run = function(link) {
@@ -44,6 +45,14 @@ let run = function(link) {
         $('<iframe id="ispotifydl" style="display:none" name="ispotifydl"></iframe>').appendTo($('#main'));
     }
     window.open(`spotdl:${link.url}`, 'ispotifydl');
+}
+
+let runChoice = function(link) {
+    if (!link || !link.url || !link.type) console.error("Can't call spotify-downloader without a target URL.");
+    if ($('#ispotifydl').length == 0) {
+        $('<iframe id="ispotifydl" style="display:none" name="ispotifydl"></iframe>').appendTo($('#main'));
+    }
+    window.open(`spotdl:${link.url} -m`, 'ispotifydl');
 }
 
 /* Creates a Download context menu item and prepends it to target. */
@@ -61,7 +70,16 @@ let createEntry = function() {
             link = findLink(menu);
             if (!link) return;
             run(link);
-        });
+        }).append($('<span class="spotdl-choice">Choose</span>').click(function(event) {
+            $(menu).hide();
+            setTimeout(function() {
+                $(document).bind('click.spotdl contextmenu.spotdl', function() { $(menu).show(); $(document).unbind('click.spotdl contextmenu.spotdl'); });
+            }, 0);
+
+            link = findLink(menu);
+            if (!link) return;
+            runChoice(link);
+        }));
     }
 }
 

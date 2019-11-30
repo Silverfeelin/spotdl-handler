@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace SpotifyDownloader
@@ -32,19 +33,13 @@ namespace SpotifyDownloader
             }
             if (!Directory.Exists(directory))
             {
-                WaitAndExit("Output directory '{0}' does not exist. Please run the application without any arguments to configure settings."); return;
+                WaitAndExit($"Output directory '{directory}' does not exist. Please run the application without any arguments to configure settings."); return;
             }
 
             // Fix args
             if (args[0].IndexOf("%20", StringComparison.Ordinal) != -1) args = args[0].Split("%20");
             if (args[0].IndexOf("spotdl:", StringComparison.Ordinal) == 0) args[0] = args[0].Substring(7);
-
-            // Validate args
-            if (args.Length != 1)
-            {
-                WaitAndExit("Expected 1 argument. Got {0}.\nUsage:\ndotnet SpotifyDownloader.dll https://open.spotify.com/track/ID", args.Length); return;
-            }
-
+            
             // Get type
             var reg = new Regex("https:\\/\\/open\\.spotify\\.com\\/([a-zA-Z]+)\\/[a-zA-Z0-9]+");
             var match = reg.Match(args[0]);
@@ -55,6 +50,12 @@ namespace SpotifyDownloader
 
             // Download
             var options = _config["output"].ToObject<SpotDl.Options>();
+
+            if (args.Skip(1).Any(a => a == "-m"))
+            {
+                options.Manual = true;
+                options.Overwrite = "force";
+            }
 
             var valid = true;
             var spotdl = new SpotDl();
