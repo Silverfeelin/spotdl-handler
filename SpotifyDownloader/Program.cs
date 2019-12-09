@@ -1,159 +1,148 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using SpotifyDownloader.Configuration;
+using C = System.Console;
+using CC = SpotifyDownloader.ConsoleExtensions;
 
 namespace SpotifyDownloader
 {
     internal class Program
     {
-        private static JObject _config;
+        private static ConfigurationManager _manager;
 
         private static void Main(string[] args)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("= Spotify Downloader =");
-            /* Load config */
-            LoadConfig();
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
 
-            /* Configure */
-            if (args.Length == 0)
+            // Title
+            C.Write("| ");
+            CC.Write(ConsoleColor.Cyan, "Spotify-Downloader Handler");
+            C.WriteLine($" v{version.Major}.{version.Minor}.{version.Build}");
+
+            C.Write("| ");
+            C.Write("Repository: ");
+            CC.WriteLine(ConsoleColor.White, "https://github.com/Silverfeelin/spotdl-handler");
+            C.Write("| ");
+            C.Write("Powered by Spotify-Downloader: ");
+            CC.WriteLine(ConsoleColor.White, "https://github.com/ritiek/spotify-downloader");
+            
+            //C.WriteLine("");
+
+            try
             {
-                Configure();
-                return;
+                _manager = new ConfigurationManager();
+
+                // Configure
+                if (args.Length == 0 || args.Any(a => a == "--configure"))
+                {
+                    _manager.Configure();
+                    _manager.Save();
+                    Exit(); return;
+                }
+
+                // Run
+                Run(args);
+            }
+            catch (Exception exc)
+            {
+                CC.WriteLine(ConsoleColor.Red, $"Unhandled exception:\n{exc}");
+                C.WriteLine("Press Enter to exit...");
+                C.ReadLine();
+                Environment.Exit(1);
             }
 
+            Exit();
+        }
+
+        private static void Run(string[] args)
+        {
+            var config = _manager.Config;
+            
             /* Check output directory */
-            var directory = _config["output"]["directory"].Value<string>();
-            if (string.IsNullOrWhiteSpace(directory))
+            if (!ValidateDirectory(config))
             {
-                WaitAndExit("Output directory not configured. Please run the application without any arguments to configure settings."); return;
-            }
-            if (!Directory.Exists(directory))
-            {
-                WaitAndExit($"Output directory '{directory}' does not exist. Please run the application without any arguments to configure settings."); return;
+                Exit(1); return;
             }
 
             // Fix args
             if (args[0].IndexOf("%20", StringComparison.Ordinal) != -1) args = args[0].Split("%20");
             if (args[0].IndexOf("spotdl:", StringComparison.Ordinal) == 0) args[0] = args[0].Substring(7);
-            
+
             // Get type
             var reg = new Regex("https:\\/\\/open\\.spotify\\.com\\/([a-zA-Z]+)\\/[a-zA-Z0-9]+");
             var match = reg.Match(args[0]);
             if (!match.Success)
             {
-                WaitAndExit("Incorrect Spotify URL."); return;
+                CC.WriteLine(ConsoleColor.Red, "Incorrect Spotify URL.");
+                Exit(1); return;
             }
 
             // Download
-            var options = _config["output"].ToObject<SpotDl.Options>();
-
             if (args.Skip(1).Any(a => a == "-m"))
             {
-                options.Manual = true;
-                options.Overwrite = "force";
+                config.Output.Manual = true;
+                config.Output.Overwrite = "force";
             }
 
+            // Detmerine download type.
             var valid = true;
             var spotdl = new SpotDl();
             switch (match.Groups[1].Value)
             {
                 case "track":
-                    options.SongUrl = args[0];
+                    config.Output.SongUrl = args[0];
                     break;
                 case "album":
-                    options.AlbumUrl = args[0];
+                    config.Output.AlbumUrl = args[0];
                     break;
                 case "playlist":
-                    options.PlaylistUrl = args[0];
+                    config.Output.PlaylistUrl = args[0];
                     break;
                 default:
-                    Console.WriteLine("Type {0} not supported! Downloading is limited to tracks, albums and playlists.", match.Groups[1].Value);
+                    C.WriteLine("Type {0} not supported! Downloading is limited to tracks, albums and playlists.", match.Groups[1].Value);
                     valid = false;
                     break;
             }
 
             if (valid)
             {
-                spotdl.Download(options);
+                spotdl.Download(config.Output);
             }
 
-            // Wait for exit...
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Done downloading!");
-            Console.ResetColor();
-
-            if (_config["keepOpen"]?.Value<bool>() == true)
-            {
-                Console.WriteLine("Press any key to exit...");
-                Console.ReadKey(true);
-            }
+            CC.WriteLine(ConsoleColor.Green, "Done downloading!");
         }
 
-        #region Config
-
-        private static void LoadConfig()
+        private static bool ValidateDirectory(Config config)
         {
-            var assemblyPath = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-            var appsettingsPath = Path.Combine(assemblyPath, "appsettings.json");
-            var userAppsettingsPath = Path.Combine(assemblyPath, "appsettings.user.json");
-
-            _config = JObject.Parse(File.ReadAllText(appsettingsPath));
-            if (File.Exists(userAppsettingsPath))
+            var directory = config.Output.Directory;
+            if (string.IsNullOrWhiteSpace(directory))
             {
-                var userConfig = JObject.Parse(File.ReadAllText(userAppsettingsPath));
-                _config.Merge(userConfig);
+                CC.WriteLine(ConsoleColor.Red, "Output directory not configured. Please run the application without any arguments to configure settings.");
+                return false;
             }
-        }
-
-        static void Configure()
-        {
-            Console.WriteLine("Configure SpotifyDownloader. Type 'exit' at any time to stop early.");
-
-            /* Directory */
-            Console.WriteLine("Download folder (blank for 'My Music'):");
-            var path = Console.ReadLine();
-            if (path == "exit") return;
-            if (!string.IsNullOrWhiteSpace(path))
+            if (!Directory.Exists(directory))
             {
-                _config["output"]["directory"] = path;
-            }
-            else
-            {
-                Console.WriteLine("Defaulting to 'My Music'.");
-                _config["output"]["directory"] = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+                CC.Write(ConsoleColor.Red, "Output directory ");
+                CC.Write(ConsoleColor.Yellow, directory);
+                CC.Write(ConsoleColor.Red, " does not exist. Please run the application without any arguments to configure settings.");
+                return false;
             }
 
-            /* Extension */
-            Console.WriteLine("File extension (blank for '.m4a'):");
-            Console.WriteLine("Supported: .mp3, .m4a, .flac");
-            var ext = Console.ReadLine();
-            if (ext == "exit") { SaveConfig(); return; }
-            if (string.IsNullOrWhiteSpace(ext)) ext = ".m4a";
-            _config["output"]["extension"] = ext;
-
-            /* Save */
-            SaveConfig();
+            return true;
         }
 
-        private static async void SaveConfig()
+        private static void Exit(int code = 0)
         {
-            var path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "appsettings.user.json");
-            await File.WriteAllTextAsync(path, _config.ToString(Formatting.Indented));
-        }
-
-        #endregion
-
-        /* Shows a message and waits for a key before exiting. */
-        private static void WaitAndExit(string message, params object[] args)
-        {
-            Console.WriteLine(message, args);
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
-            Environment.Exit(0);
+            if (_manager.Config.KeepOpen)
+            {
+                C.ResetColor();
+                C.WriteLine("Press Enter to exit...");
+                C.ReadLine();
+            }
+            Environment.Exit(code);
         }
     }
 }

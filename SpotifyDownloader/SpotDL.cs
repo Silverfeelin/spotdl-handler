@@ -2,8 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SpotifyDownloader
 {
@@ -32,25 +30,27 @@ namespace SpotifyDownloader
 
         public void Download(Options options)
         {
+            // Song or list can be downloaded directly
             if (options.SongUrl != null || options.List != null)
             {
                 Call(options);
                 return;
             }
-
+            // Playlists and albums require 2 steps.
             options = options.Clone();
             
+            // Download track info.
             var file = Path.Combine(options.Directory, "spotdl_songs.txt");
             File.Delete(file);
             options.WriteTo = file;
             Call(options);
             
+            // Download track list.
             options.PlaylistUrl = null;
             options.AlbumUrl = null;
             options.WriteTo = null;
             options.List = file;
             Call(options);
-
             File.Delete(file);
         }
 
@@ -95,7 +95,7 @@ namespace SpotifyDownloader
         /* Creates process for spotdl without args. */
         private Process CreateProcess()
         {
-            var process = new Process
+            return new Process
             {
                 StartInfo =
                 {
@@ -108,31 +108,17 @@ namespace SpotifyDownloader
                 },
                 EnableRaisingEvents = true
             };
-            process.OutputDataReceived += (sender, e) => Console.WriteLine(e.Data);
-            process.ErrorDataReceived += (sender, e) => Console.Error.WriteLine(e.Data);
-
-            return process;
         }
 
         /* Runs the process and waits for it to finish. */
         private void RunProcess(Process process)
         {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments ?? string.Empty);
-            Console.ResetColor();
+            ConsoleExtensions.WriteLine(ConsoleColor.DarkCyan,
+                "{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments ?? string.Empty);
             process.Start();
             process.WaitForExit();
         }
-
-        /* Runs the process asynchronously. */
-        private async Task RunProcessAsync(Process process)
-        {
-            var sem = new SemaphoreSlim(0, 1);
-            process.Start();
-            process.Exited += (sender, args) => sem.Release();
-            await sem.WaitAsync();
-        }
-
+        
         #endregion
     }
 }
