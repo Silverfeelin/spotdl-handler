@@ -6,7 +6,7 @@
 !include StrRep.nsh
 
 !define PRODUCT_NAME "SpotDL Handler"
-!define PRODUCT_VERSION "1.1.2"
+!define PRODUCT_VERSION "1.2.0"
 !define PRODUCT_PUBLISHER "Silverfeelin"
 !define PRODUCT_WEB_SITE "https://www.github.com/Silverfeelin"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"

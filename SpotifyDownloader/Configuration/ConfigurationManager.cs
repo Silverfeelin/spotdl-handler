@@ -39,8 +39,22 @@ namespace SpotifyDownloader.Configuration
             var cloned = (JObject) _base.DeepClone();
             cloned.Merge(_user);
 
+
             _config = cloned.ToObject<Config>();
+            Update(_config);
             return _config;
+        }
+
+        public static void Update(Config config)
+        {
+            if (config == null) return;
+
+            if (config.Output != null)
+            {
+                // Fix extension
+                if (config.Output.Extension?.StartsWith(".") == true)
+                    config.Output.Extension = config.Output.Extension.Substring(1);
+            }
         }
 
         public void Save()
@@ -94,11 +108,11 @@ namespace SpotifyDownloader.Configuration
 
         private void ConfigureExtension(Config config)
         {
-            var allowed = new HashSet<string> {".m4a", ".mp3", ".flac"};
+            var allowed = new HashSet<string> {"m4a", "mp3", "flac"};
 
             // Extension
-            C.WriteLine("File format (.m4a .mp3 .flac):");
-            CC.WriteLine(ConsoleColor.DarkGray, "Enter nothing to use '.m4a'.");
+            C.WriteLine("File format (m4a, mp3, flac):");
+            CC.WriteLine(ConsoleColor.DarkGray, "Enter nothing to use 'm4a'.");
             C.ForegroundColor = ConsoleColor.Yellow;
             string extension;
             do
@@ -108,12 +122,12 @@ namespace SpotifyDownloader.Configuration
                 // Default
                 if (string.IsNullOrWhiteSpace(extension))
                 {
-                    extension = ".m4a";
+                    extension = "m4a";
                     PreviousLine();
                     C.WriteLine(extension);
                 }
-                else if (!extension.StartsWith("."))
-                    extension = $".{extension}";
+                else if (extension.StartsWith("."))
+                    extension = extension.Substring(1);
 
                 if (!allowed.Contains(extension))
                     CC.WriteLine(ConsoleColor.Red, "The format is not valid. Please enter one of the options.");

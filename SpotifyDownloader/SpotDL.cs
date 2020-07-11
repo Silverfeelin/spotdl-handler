@@ -72,7 +72,7 @@ namespace SpotifyDownloader
             void AppendBoolIf(string k, bool b) { if (b) sb.Append($"{k} "); }
 
             AppendIf("-s", options.SongUrl);
-            AppendIf("-b", options.AlbumUrl);
+            AppendIf("-a", options.AlbumUrl);
             AppendIf("-p", options.PlaylistUrl);
             AppendIf("-l", options.List);
 
