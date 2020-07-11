@@ -81,7 +81,7 @@ namespace SpotifyDownloader
             AppendIf("-ll", options.LogLevel);
 
             AppendTextIf("--write-to", options.WriteTo);
-            AppendTextIf("--folder", options.Directory);
+            AppendTextIf("-f", options.Directory);
             AppendTextIf("--ff", options.FileFormat);
 
             AppendBoolIf("-m", options.Manual);
